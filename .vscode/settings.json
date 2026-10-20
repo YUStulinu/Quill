@@ -1,0 +1,10 @@
+{
+  "rust-analyzer.check.command": "clippy",
+  "files.associations": {
+    "*.ql": "quill"
+  },
+  "search.exclude": {
+    "target/**": true,
+    "editors/vscode/node_modules/**": true
+  }
+}

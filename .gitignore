@@ -1,0 +1,11 @@
+/target
+/fuzz-failures
+editors/vscode/node_modules
+editors/vscode/out
+*.vsix
+# Executables and assembly produced by `quill build` next to the sources
+examples/*.exe
+examples/*.s
+bench/*.exe
+bench/*.s
+*.exe

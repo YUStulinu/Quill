@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      # Native code is assembled and linked with GCC: MinGW-w64 on Windows.
+      - name: Install MinGW-w64 GCC
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          install: mingw-w64-ucrt-x86_64-gcc
+          path-type: inherit
+      - name: Use MinGW-w64 GCC
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: echo "QUILL_CC=$env:RUNNER_TEMP\msys64\ucrt64\bin\gcc.exe" >> $env:GITHUB_ENV
+      - name: Build
+        run: cargo build --release
+      - name: Tests (unit, programs at every level, native, GC stress, diagnostics, LSP, fuzz)
+        run: cargo test --release
+      - name: Differential fuzzing (300 random programs)
+        run: cargo run --release -- fuzz 300
+
+  vscode-extension:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: editors/vscode
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npm run compile
+      - run: npm run package
+      - uses: actions/upload-artifact@v4
+        with:
+          name: quill-vscode-extension
+          path: editors/vscode/quill-lang.vsix

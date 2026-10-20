@@ -1,0 +1,57 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "cargo build --release",
+      "type": "shell",
+      "command": "cargo build --release",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": "$rustc"
+    },
+    {
+      "label": "cargo test",
+      "type": "shell",
+      "command": "cargo test --release",
+      "group": { "kind": "test", "isDefault": true },
+      "problemMatcher": "$rustc"
+    },
+    {
+      "label": "quill: run current file",
+      "type": "shell",
+      "command": "${workspaceFolder}/target/release/quill",
+      "args": ["run", "${file}"],
+      "dependsOn": "cargo build --release",
+      "problemMatcher": []
+    },
+    {
+      "label": "quill: show assembly of current file",
+      "type": "shell",
+      "command": "${workspaceFolder}/target/release/quill",
+      "args": ["build", "${file}", "--emit", "asm"],
+      "dependsOn": "cargo build --release",
+      "problemMatcher": []
+    },
+    {
+      "label": "quill: fuzz 200 programs",
+      "type": "shell",
+      "command": "${workspaceFolder}/target/release/quill",
+      "args": ["fuzz", "200"],
+      "dependsOn": "cargo build --release",
+      "problemMatcher": []
+    },
+    {
+      "label": "benchmarks",
+      "type": "shell",
+      "command": "python bench/run.py",
+      "dependsOn": "cargo build --release",
+      "problemMatcher": []
+    },
+    {
+      "label": "build VS Code extension",
+      "type": "shell",
+      "command": "npm install && npm run compile && npm run package",
+      "options": { "cwd": "${workspaceFolder}/editors/vscode" },
+      "problemMatcher": []
+    }
+  ]
+}

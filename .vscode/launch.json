@@ -1,0 +1,37 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Quill: run current .ql file",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": { "args": ["build", "--bin=quill"] },
+      "args": ["run", "${file}"],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Quill: REPL",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": { "args": ["build", "--bin=quill"] },
+      "args": ["repl"],
+      "cwd": "${workspaceFolder}",
+      "terminal": "integrated"
+    },
+    {
+      "name": "Quill: print optimized IR of current file",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": { "args": ["build", "--bin=quill"] },
+      "args": ["build", "${file}", "--emit", "ir-opt"],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "VS Code extension (development host)",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": ["--extensionDevelopmentPath=${workspaceFolder}/editors/vscode", "${workspaceFolder}/examples"],
+      "outFiles": ["${workspaceFolder}/editors/vscode/out/**/*.js"]
+    }
+  ]
+}

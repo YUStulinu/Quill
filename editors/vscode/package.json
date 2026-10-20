@@ -1,0 +1,119 @@
+{
+  "name": "quill-lang",
+  "displayName": "Quill",
+  "description": "Quill language support: syntax highlighting, errors as you type, inferred types on hover and inline, go to definition, completion, and commands to run a file or view its IR and assembly.",
+  "version": "0.1.0",
+  "publisher": "yustulinu",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YUStulinu/Quill"
+  },
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onLanguage:quill"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "quill",
+        "aliases": [
+          "Quill",
+          "quill"
+        ],
+        "extensions": [
+          ".ql"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "quill",
+        "scopeName": "source.quill",
+        "path": "./syntaxes/quill.tmLanguage.json"
+      }
+    ],
+    "configuration": {
+      "title": "Quill",
+      "properties": {
+        "quill.path": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the quill executable. Empty: use target/release or target/debug of the open workspace if present, otherwise `quill` from the PATH."
+        },
+        "quill.optLevel": {
+          "type": "string",
+          "enum": [
+            "-O0",
+            "-O1",
+            "-O2"
+          ],
+          "default": "-O2",
+          "description": "Optimization level for the Run, Show IR and Show Assembly commands."
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "quill.run",
+        "title": "Quill: Run File",
+        "icon": "$(play)"
+      },
+      {
+        "command": "quill.showIr",
+        "title": "Quill: Show Optimized IR"
+      },
+      {
+        "command": "quill.showAsm",
+        "title": "Quill: Show Assembly"
+      },
+      {
+        "command": "quill.restartServer",
+        "title": "Quill: Restart Language Server"
+      }
+    ],
+    "menus": {
+      "editor/title/run": [
+        {
+          "command": "quill.run",
+          "when": "resourceLangId == quill",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "quill.run",
+          "when": "editorLangId == quill"
+        },
+        {
+          "command": "quill.showIr",
+          "when": "editorLangId == quill"
+        },
+        {
+          "command": "quill.showAsm",
+          "when": "editorLangId == quill"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "package": "vsce package --allow-missing-repository -o quill-lang.vsix"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.90.0",
+    "@vscode/vsce": "^3.2.1",
+    "typescript": "^5.4.0"
+  }
+}
